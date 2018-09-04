@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int StrCmp(void *vp1, void *vp2){
+    char *sl1 = *(char**)vp1;
+    char *sl2 = *(char**)vp2;
+    return strcmp(sl1, sl2);
+}
+
+void *IntCmp(void *elem1, void *elem2){
+    int *ip1 = elem1;
+    int *ip2 = elem2;
+    return *ip1 - *ip2;
+}
+
+void *lsearch3(void *key, void *base, int n, int elemSize, int (*cmpfn)(void*, void*)){
+    for(int i = 0; i < n; i++){
+        void *elemAdress = (char*)base + i*elemSize;
+        if(cmpfn(key, elemAdress) == 0) return elemAdress;
+    }
+    return NULL;
+}
+
+void *lsearch(void *key, void *base, int n, int elemSize){
+    for(int i = 0; i < n; i++){
+        void *elemAdress = (char*)base + i*elemSize;
+        if(memcpy(key, elemAdress, elemSize) == 0) return elemAdress;
+    }
+    return NULL;
+}
+
+int lsearch2(int key, int array[], int size){
+    for(int i = 0; i < size; i++){
+        if (array[i] == key) return i;
+    }
+    return -1;
+}
+
+void swap(void *vp1, void *vp2, int size){
+    char buffer[size];
+    memcpy(buffer, vp1, size);
+    memcpy(vp1, vp2, size);
+    memcpy(vp2, buffer, size);
+}
+
+int main()
+{
+    char *notes[] = {"Ab", "F#", "B", "Gb", "D"};
+    char *favoriteNote = "Eb";
+    char **found = lsearch3(&favoriteNote, notes, 5, sizeof(char*), StrCmp);
+    
+    int array[] = {4, 2, 3, 7, 11, 6};
+    int size = 6;
+    int number = 1;
+    int *found = lsearch3(&number, array, 6, sizeof(int), IntCmp);
+    if(found == NULL) printf("no luck\n");
+    else printf("%d\n", *found);
+    
+    int x = 132, y = 20;
+    swap(&x, &y, sizeof(int));
+    printf("%d\n", x);
+    printf("%d\n", y);
+    return 0;
+}
