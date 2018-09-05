@@ -29,13 +29,15 @@ void *binarySearchBinary(void *key, void *base, int n, int elemBegin, int elemSi
 // Integer specific binary search
 
 int binarySearch(int key, int base[], int n, int elemBegin){
-    int mid = elemBegin + (n - elemBegin)/2;
+    if(n >= elemBegin){
+        int mid = elemBegin + (n - elemBegin)/2;
 
-    if(base[mid] == key) return mid;
+        if(base[mid] == key) return mid;
 
-    else if(base[mid] > key) return binarySearch(key, base, mid - 1, elemBegin);
+        else if(base[mid] > key) return binarySearch(key, base, mid - 1, elemBegin);
 
-    else return binarySearch(key, base, n, mid +1);
+        else return binarySearch(key, base, n, mid +1);
+    }
 
     return -1;
 }
