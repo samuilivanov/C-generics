@@ -1,5 +1,35 @@
 #include <stdio.h>
+#include <string.h>
 
+
+void *IntCmp(void *elem1, void *elem2){
+    int *ip1 = elem1;
+    int *ip2 = elem2;
+    if (*ip1 - *ip2 == 0) return 0;
+    else if(*ip1 < *ip2) return -1;
+    else return 1;
+}
+
+void *binarySearchBinary(void *key, void *base, int n, int elemBegin, int elemSize, int (*cmpfn)(void *, void *)){
+    
+    int mid = elemBegin + (n - elemBegin)/2;
+    if(mid == 0) mid = 1;
+    printf("%d\n", mid);
+    
+    void *elemAdress = (char*)base + mid*elemSize;
+    
+    if(cmpfn(key, elemAdress) == 0){
+        return mid; // Returning the index of the search element.
+    }
+    
+    else if(cmpfn(key, elemAdress) < 0) return binarySearchBinary(key, base, mid - 1, elemBegin, elemSize, cmpfn);
+    
+    else if(cmpfn(key, elemAdress) > 0) return binarySearchBinary(key, base, n, mid + 1, elemSize, cmpfn);
+
+    else return NULL;
+}
+
+/**** Binary Search for integers
 int binarySearch(int key, int base[], int n, int elemBegin){
     int mid = elemBegin + (n - elemBegin)/2;
     
@@ -10,7 +40,7 @@ int binarySearch(int key, int base[], int n, int elemBegin){
     else return binarySearch(key, base, n, mid +1);
     
     return -1;
-}
+}*/
 
 int main()
 {
@@ -18,7 +48,10 @@ int main()
     int array[] = {1, 3, 4, 6, 8, 9, 13, 15, 20, 21};
     int key = 21;
     int n = sizeof(array)/sizeof(array[0]);
-    int found = binarySearch(key, array, n - 1, 0);
-    printf("%d\n", found);
+    int *found = binarySearchBinary(&key, &array, n - 1, 0, sizeof(int), IntCmp);
+    
+    if(found == NULL) printf("nope");
+    else printf("found index = %d\n", found);
+
     return 0;
 }
